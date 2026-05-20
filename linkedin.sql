@@ -90,7 +90,7 @@ foreign key(product_id) references products(product_id)
 
 select * from categories;
 select * from products;
-mmselect * from customers;
+select * from customers;
 select * from orders;
 
 --in joins we can write multiple joins in one query or we can write filters
