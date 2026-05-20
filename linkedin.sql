@@ -177,7 +177,7 @@ select extract (day from current_date);
 --another method
 select date_part('day', current_date);
 
---3 ways to chech current month or date
+--3 ways to check current month or date
 select extract (month from current_date);
 select date_part('month', current_date);
 select to_char(current_date, 'month');
