@@ -1,3 +1,5 @@
+
+
 create table categories(
 category_id int primary key,
 name varchar(100)
@@ -139,6 +141,7 @@ SELECT
 FROM employees2;
 
 -- union all example , it will show all selected data included dublicate rows from 2 tables;
+
 SELECT 
 	first_name AS firstname,
 	last_name AS lastname,
@@ -168,7 +171,7 @@ select floor(2.7);
 select round(2.33333, 2);
 
 --sqrt()  Square Root, 
-select round(sqrt(4.0),2);
+select round(sqrt(.0),2);
 
 --DATE FUNCTION
 select current_date;
@@ -177,7 +180,7 @@ select extract (day from current_date);
 --another method
 select date_part('day', current_date);
 
---3 ways to check current month or date
+--3 ways to chech current month or date
 select extract (month from current_date);
 select date_part('month', current_date);
 select to_char(current_date, 'month');
@@ -398,3 +401,183 @@ select * from contacts
 select notes,
 position('university' in notes) from contacts;
 
+
+-- ============================================================================
+-- MASTER TABLE FOR LEARNING / TESTING ALL POSTGRESQL WINDOW FUNCTIONS
+-- ============================================================================
+
+CREATE TABLE window_function_data (
+    id BIGSERIAL PRIMARY KEY,
+
+    -- Employee / User Info
+    employee_name      VARCHAR(100),
+    department         VARCHAR(100),
+    team               VARCHAR(100),
+    manager_name       VARCHAR(100),
+    gender             VARCHAR(10),
+
+    -- Geographic Partitioning
+    country            VARCHAR(100),
+    city               VARCHAR(100),
+
+    -- Date / Time Columns
+    hire_date          DATE,
+    joining_year       INT,
+    record_date        DATE,
+    created_at         TIMESTAMP,
+
+    -- Numeric Columns for Analytics
+    salary             NUMERIC(12,2),
+    bonus              NUMERIC(12,2),
+    sales_amount       NUMERIC(12,2),
+    profit_amount      NUMERIC(12,2),
+    expense_amount     NUMERIC(12,2),
+
+    -- Performance Metrics
+    performance_score  NUMERIC(5,2),
+    projects_completed INT,
+    login_count        INT,
+    working_hours      NUMERIC(5,2),
+
+    -- Transaction / Event Data
+    order_id           BIGINT,
+    transaction_amount NUMERIC(12,2),
+    quantity           INT,
+
+    -- Status Columns
+    employment_status  VARCHAR(50),
+    order_status       VARCHAR(50),
+
+    -- Category Columns
+    product_category   VARCHAR(100),
+    product_name       VARCHAR(100),
+
+    -- Sequential / Ranking Support
+    sequence_no        INT,
+
+    -- Text Column
+    remarks            TEXT
+);
+
+INSERT INTO window_function_data (
+    employee_name,
+    department,
+    team,
+    manager_name,
+    gender,
+    country,
+    city,
+    hire_date,
+    joining_year,
+    record_date,
+    created_at,
+    salary,
+    bonus,
+    sales_amount,
+    profit_amount,
+    expense_amount,
+    performance_score,
+    projects_completed,
+    login_count,
+    working_hours,
+    order_id,
+    transaction_amount,
+    quantity,
+    employment_status,
+    order_status,
+    product_category,
+    product_name,
+    sequence_no,
+    remarks
+)
+VALUES
+
+-- IT Department
+('Ali', 'IT', 'Backend', 'Ahmed', 'Male',
+ 'Pakistan', 'Lahore',
+ '2020-01-15', 2020, '2025-01-01', NOW(),
+ 120000, 15000, 50000, 12000, 5000,
+ 4.5, 12, 20, 8.5,
+ 1001, 25000, 2,
+ 'Active', 'Completed',
+ 'Electronics', 'Laptop',
+ 1, 'Top performer'),
+
+('Sara', 'IT', 'Frontend', 'Ahmed', 'Female',
+ 'Pakistan', 'Karachi',
+ '2021-03-20', 2021, '2025-01-02', NOW(),
+ 110000, 12000, 42000, 10000, 4000,
+ 4.2, 10, 18, 8.0,
+ 1002, 18000, 1,
+ 'Active', 'Completed',
+ 'Electronics', 'Tablet',
+ 2, 'Consistent performance'),
+
+('Usman', 'IT', 'Backend', 'Ahmed', 'Male',
+ 'Pakistan', 'Islamabad',
+ '2019-07-10', 2019, '2025-01-03', NOW(),
+ 130000, 18000, 61000, 15000, 7000,
+ 4.8, 15, 22, 9.0,
+ 1003, 32000, 3,
+ 'Active', 'Pending',
+ 'Electronics', 'Monitor',
+ 3, 'Senior engineer'),
+
+-- HR Department
+('Ayesha', 'HR', 'Recruitment', 'Fatima', 'Female',
+ 'Pakistan', 'Lahore',
+ '2018-02-11', 2018, '2025-01-01', NOW(),
+ 90000, 8000, 25000, 6000, 3000,
+ 4.0, 8, 16, 7.5,
+ 1004, 12000, 1,
+ 'Active', 'Completed',
+ 'Office', 'Chair',
+ 4, 'HR specialist'),
+
+('Bilal', 'HR', 'Operations', 'Fatima', 'Male',
+ 'Pakistan', 'Karachi',
+ '2022-06-18', 2022, '2025-01-02', NOW(),
+ 85000, 7000, 20000, 5000, 2500,
+ 3.8, 6, 14, 7.0,
+ 1005, 9000, 2,
+ 'Inactive', 'Cancelled',
+ 'Office', 'Desk',
+ 5, 'New employee'),
+
+-- Sales Department
+('Hina', 'Sales', 'Retail', 'Kashif', 'Female',
+ 'Pakistan', 'Faisalabad',
+ '2020-09-01', 2020, '2025-01-03', NOW(),
+ 100000, 20000, 90000, 25000, 9000,
+ 4.7, 20, 25, 9.5,
+ 1006, 45000, 5,
+ 'Active', 'Completed',
+ 'Furniture', 'Sofa',
+ 6, 'Excellent sales'),
+
+('Zain', 'Sales', 'Corporate', 'Kashif', 'Male',
+ 'Pakistan', 'Multan',
+ '2021-11-15', 2021, '2025-01-04', NOW(),
+ 95000, 17000, 75000, 18000, 8500,
+ 4.3, 17, 21, 8.7,
+ 1007, 38000, 4,
+ 'Active', 'Completed',
+ 'Furniture', 'Table',
+ 7, 'Corporate specialist'),
+
+('Mariam', 'Sales', 'Retail', 'Kashif', 'Female',
+ 'Pakistan', 'Lahore',
+ '2019-04-05', 2019, '2025-01-05', NOW(),
+ 105000, 19000, 85000, 22000, 8800,
+ 4.6, 19, 24, 9.1,
+ 1008, 41000, 3,
+ 'Active', 'Pending',
+ 'Furniture', 'Bed',
+ 8, 'Strong closer');
+
+ select * from window_function_data;
+
+ select employee_name, id,
+ rank() over (partition by id order by salary desc) as rank,salary
+ from window_function_data;
+ 
