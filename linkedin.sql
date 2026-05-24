@@ -580,4 +580,34 @@ VALUES
  select employee_name, id,
  rank() over (partition by id order by salary desc) as rank,salary
  from window_function_data;
+
+
+  select employee_name, id,
+ dense_rank() over (partition by id order by salary desc) as rank,salary
+ from window_function_data;
+
+ select employee_name, id,
+ row_number() over (partition by id order by salary desc) as row_number1,salary
+ from window_function_data;
+
+ -- LAG and LEAD Function
  
+ SELECT
+    employee_name,department,salary,
+    LAG(salary,1) OVER (PARTITION BY department ORDER BY salary) AS previous_salary
+FROM window_function_data;
+
+SELECT
+    employee_name,sales_amount,
+    LAG(sales_amount,1) OVER (ORDER BY sales_amount) AS previous_sales,
+
+    sales_amount -
+    LAG(sales_amount,1) OVER (ORDER BY sales_amount) AS growth
+FROM window_function_data;
+
+--LEAD FUNCTION
+
+SELECT employee_name,department,salary,
+    LEAD(salary) OVER (PARTITION BY department ORDER BY salary) AS next_salary
+FROM window_function_data;
+
