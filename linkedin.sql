@@ -180,14 +180,14 @@ select extract (day from current_date);
 --another method
 select date_part('day', current_date);
 
---3 ways to chech current month or date
+--3 ways to check current month or date
 select extract (month from current_date);
 select date_part('month', current_date);
 select to_char(current_date, 'month');
 
 select extract (year from current_date);
 
--- you can also use truncate with date
+-- you can also use truncate with date,. Data ko Groups mein Baantna ka liye like month ya year
 select date_trunc('month', current_date);
 
 
@@ -636,3 +636,168 @@ SELECT
         ROWS BETWEEN 1 PRECEDING AND CURRENT ROW
     ) AS moving_average
 FROM window_function_data;
+
+--mn ab VIEWS FUNCTION study kr rha ho, is mn 4 tables datawithbara na use kye hn
+
+
+
+
+-- 1. Create Schema
+CREATE SCHEMA IF NOT EXISTS sales;
+
+
+-- 2. Create Customers Table
+CREATE TABLE sales.customers (
+    customer_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    country VARCHAR(50),
+    score INT
+);
+
+INSERT INTO sales.customers VALUES
+    (1, 'Jossef', 'Goldberg', 'Germany', 350),
+    (2, 'Kevin', 'Brown', 'USA', 900),
+    (3, 'Mary', NULL, 'USA', 750),
+    (4, 'Mark', 'Schwarz', 'Germany', 500),
+    (5, 'Anna', 'Adams', 'USA', NULL);
+
+-- 3. Create Employees Table
+CREATE TABLE sales.employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department VARCHAR(50),
+    birth_date DATE,
+    gender CHAR(1),
+    salary INT,
+    manager_id INT
+);
+
+INSERT INTO sales.employees VALUES
+    (1, 'Frank', 'Lee', 'Marketing', '1988-12-05', 'M', 55000, NULL),
+    (2, 'Kevin', 'Brown', 'Marketing', '1972-11-25', 'M', 65000, 1),
+    (3, 'Mary', NULL, 'Sales', '1986-01-05', 'F', 75000, 1),
+    (4, 'Michael', 'Ray', 'Sales', '1977-02-10', 'M', 90000, 2),
+    (5, 'Carol', 'Baker', 'Sales', '1982-02-11', 'F', 55000, 3);
+
+-- 4. Create Products Table
+CREATE TABLE sales.products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    category VARCHAR(50),
+    price INT
+);
+
+INSERT INTO sales.products VALUES
+    (101, 'Bottle', 'Accessories', 10),
+    (102, 'Tire', 'Accessories', 15),
+    (103, 'Socks', 'Clothing', 20),
+    (104, 'Caps', 'Clothing', 25),
+    (105, 'Gloves', 'Clothing', 30);
+
+-- 5. Create Orders Table (Note: TIMESTAMP is used instead of DATETIME2)
+CREATE TABLE sales.orders (
+    order_id INT PRIMARY KEY,
+    product_id INT,
+    customer_id INT,
+    sales_person_id INT,
+    order_date DATE,
+    ship_date DATE,
+    order_status VARCHAR(50),
+    ship_address VARCHAR(255),
+    bill_address VARCHAR(255),
+    quantity INT,
+    sales INT,
+    creation_time TIMESTAMP
+);
+
+INSERT INTO sales.orders VALUES
+    (1, 101, 2, 3, '2025-01-01', '2025-01-05', 'Delivered','9833 Mt. Dias Blv.', '1226 Shoe St.', 1, 10, '2025-01-01 12:34:56'),
+    (2, 102, 3, 3, '2025-01-05', '2025-01-10', 'Shipped','250 Race Court',NULL, 1, 15, '2025-01-05 23:22:04'),
+    (3, 101, 1, 5, '2025-01-10', '2025-01-25', 'Delivered','8157 W. Book','8157 W. Book', 2, 20, '2025-01-10 18:24:08'),
+    (4, 105, 1, 3, '2025-01-20', '2025-01-25', 'Shipped', '5724 Victory Lane', '', 2, 60, '2025-01-20 05:50:33'),
+    (5, 104, 2, 5, '2025-02-01', '2025-02-05', 'Delivered',NULL, NULL, 1, 25, '2025-02-01 14:02:41'),
+    (6, 104, 3, 5, '2025-02-05', '2025-02-10', 'Delivered','1792 Belmont Rd.',NULL, 2, 50, '2025-02-06 15:34:57'),
+    (7, 102, 1, 1, '2025-02-15', '2025-02-27', 'Delivered','136 Balboa Court', '', 2, 30, '2025-02-16 06:22:01'),
+    (8, 101, 4, 3, '2025-02-18', '2025-02-27', 'Shipped','2947 Vine Lane','4311 Clay Rd', 3, 90, '2025-02-18 10:45:22'),
+    (9, 101, 2, 3, '2025-03-10', '2025-03-15', 'Shipped','3768 Door Way', '', 2, 20,'2025-03-10 12:59:04'),
+    (10, 102, 3, 5, '2025-03-15', '2025-03-20', 'Shipped',NULL, NULL, 0, 60,'2025-03-16 23:25:15');
+
+-- these 4 tables for VIEWS in sql 
+select * from sales.customers;
+
+select * from sales.employees;
+
+select * from sales.products;
+
+select * from sales.orders;
+
+-- first giving an example of CTE(common table expression),
+--it's not part of views,You can reference a CTE multiple times, but only inside the exact same query where it was defined.
+
+WITH cte_monthly_summary AS (
+    SELECT 
+        date_trunc('month', order_date) AS ordermonth,
+        SUM(sales) AS totalsales,
+		COUNT(order_id) totalorders,
+		SUM(quantity) totalquantity
+    FROM sales.orders
+    GROUP BY date_trunc('month', order_date)
+) 
+select
+ordermonth,
+totalsales,
+SUM(totalsales) over (order by ordermonth) as runningtotal
+from cte_monthly_summary;
+
+--View: Reusable anywhere, anytime
+--Once you create a View, it is saved permanently in the database schema. You can call it in a brand new query tomorrow,
+--if you want to save view in the specific schema then write schema name with the view name
+
+CREATE VIEW sales.VIEW_MONTHLY_SUMMARY AS(
+    SELECT 
+        date_trunc('month', order_date) AS ordermonth,
+        SUM(sales) AS totalsales,
+		COUNT(order_id) totalorders,
+		SUM(quantity) totalquantity
+    FROM sales.orders
+    GROUP BY date_trunc('month', order_date)
+) 
+
+-- now view has created , lets check it
+
+SELECT * FROM VIEW_MONTHLY_SUMMARY
+
+select
+ordermonth,
+totalsales,
+SUM(totalsales) over (order by ordermonth) as runningtotal
+from VIEW_MONTHLY_SUMMARY;
+
+-- if you want to change the view then you will use 'create or replace' words, e.g below I will remove the count(order_id) totalorders
+-- IMPORTANT NOTE: create or replace is only used to add some coulumns or update something in view , but if you want to delete a column then
+-- first you will drop the whole view and the create the new view
+
+--TASK: Provide view that combines details from orders, products, customers, and employees
+
+CREATE VIEW sales.V_ORDER_DETAILS AS (
+SELECT
+    o.order_id,
+    o.order_date,
+    p.category,
+	--COALESCE null ko ktam kr de ga but concat best ha
+    --COALESCE(c.first_name) || ' ' || COALESCE(c.last_name) AS customer_name,
+	TRIM(CONCAT(c.first_name, ' ', c.last_name)) AS customer_name,
+    c.country AS customer_country,
+		TRIM(CONCAT(e.first_name, ' ', e.last_name)) AS sales_name,
+    o.sales,
+    o.quantity
+FROM sales.orders o
+LEFT JOIN sales.products p 
+    ON p.product_id = o.product_id
+LEFT JOIN sales.customers c 
+    ON c.customer_id = o.customer_id
+LEFT JOIN sales.employees e 
+ON e.employee_id = o.sales_person_id
+);
