@@ -898,7 +898,7 @@ ON e.employee_id = o.sales_person_id
 -- CLAUDE ka mutabiq STORED PROCEDURE ko kab ismal kerna chahiya or kb PYTHON, AIRFLOW OR DBT ko.
 -- >>>>> 1- Jab Kaam Simple & Repetitive Ho 
 -- >>>>> Use Case A: Daily Log Insert
--- Reason: ye kaam har roz SAME HAI, kabhi login change nahi hota, isay PYTHON script mein wrap karna unnecessary overhead hai.
+-- Reason: ye kaam har roz SAME HAI, kabhi logic change nahi hota, isay PYTHON script mein wrap karna unnecessary overhead hai.
 
 CREATE PROCEDURE log_daily_run(p_status TEXT, p_rows INT)
 LANGUAGE plpgsql
