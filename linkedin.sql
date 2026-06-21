@@ -154,33 +154,57 @@ SELECT
 	country
 FROM employees2;
 
---Standard Deviation(stddev) in an aggregations function;
+-- ========================================================
+-- --Standard Deviation(stddev) in an aggregations function
+-- ========================================================
+
 select stddev(total_amount) from orders;
 
---METHAMETICAL FUNCTIONS
---ABS() Means absolute function, it will always give the positive value
+-- ======================================================================
+-- --METHAMETICAL FUNCTIONS
+-- --ABS() Means absolute function, it will always give the positive value
+-- ======================================================================
+
 select abs(-2.6)
 
---ceil() Function, ya answer ka highest near wali value ko show krta ha (e.g 2.3-->3)
+-- =====================================================================================
+-- --ceil() Function, ya answer ka highest near wali value ko show krta ha (e.g 2.3-->3)
+-- =====================================================================================
+
 seelct ceil(2.7);
 
---floor() Function, ya result ka lowest near value ko show krta ha(e.g 2.3-->2)
+-- =============================================================================
+-- --floor() Function, ya result ka lowest near value ko show krta ha(e.g 2.3-->2)
+-- =============================================================================
+
 select floor(2.7);
 
---round() function , ya dot ka bad wali value ko control krta ha(e.g 5.88888-->5.99)
+-- ====================================================================================
+-- --round() function , ya dot ka bad wali value ko control krta ha(e.g 5.88888-->5.99)
+-- ====================================================================================
+
 select round(2.33333, 2);
 
---sqrt()  Square Root, 
+-- ======================
+-- --sqrt()  Square Root, 
+-- ======================
+
 select round(sqrt(.0),2);
 
---DATE FUNCTION
+-- ==============
+-- --DATE FUNCTION
+-- ==============
+
 select current_date;
 
 select extract (day from current_date);
+
 --another method
+
 select date_part('day', current_date);
 
 --3 ways to check current month or date
+
 select extract (month from current_date);
 select date_part('month', current_date);
 select to_char(current_date, 'month');
@@ -188,20 +212,27 @@ select to_char(current_date, 'month');
 select extract (year from current_date);
 
 -- you can also use truncate with date,. Data ko Groups mein Baantna ka liye like month ya year
+
 select date_trunc('month', current_date);
 
 
 select date_trunc('year', current_date);
 
---AGE FUNCTION
+-- =============
+-- --AGE FUNCTION
+-- =============
+
+
 select age(timestamp '2024-01-02');
 
 select age (timestamp '01-01-2023', timestamp '01-01-2026');
 
 --you can change date string, its useless dont foucus on it
+
 select to_date('01/02/2024', 'dd/mm/yyyy');
 
 --you can change the date style 
+
 select to_char(current_date, 'dd-mm-yyyy');
 
 
@@ -209,9 +240,11 @@ select to_char(current_date, 'dd-mm-yyyy');
 select current_time;
 
 --check both date and time
+
 select current_timestamp;
 
 -- check local time with time zome
+
 select localtime
 
 select localtimestamp;
@@ -219,6 +252,7 @@ select localtimestamp;
 select current_date;
 
 --TABLE FOR CONCAT COMMAND
+
 CREATE TABLE concatcommand (
     -- User Info
     user_id INT,
@@ -268,13 +302,19 @@ INSERT INTO concatcommand VALUES
 
 select * from concatcommand;
 
---CONCATENATE COMMAND USECASES
--- join first_name and last_name
+-- ==============================
+-- --CONCATENATE COMMAND USECASES
+-- -- join first_name and last_name
+-- ==============================
+
 select first_name,last_name,
 concat(first_name,' ' ,last_name) AS full_name
 from concatcommand;
 
--- upper and lower case
+-- =======================
+-- -- upper and lower case
+-- =======================
+
 select first_name,
 lower(first_name) as lower_case
 from concatcommand;
@@ -285,12 +325,18 @@ concat(first_name,' ' ,last_name) AS full_name,
 lower(first_name) as lower_case
 from concatcommand;
 
---upper_case
+-- ============
+-- --upper_case
+-- ============
+
 select first_name,
 upper(first_name) as upper_case
 from concatcommand;
 
--- evey first letter will be capital
+-- ======================================================
+-- -- INITCAP FUNCTION, evey first letter will be capital
+-- ======================================================
+
 select notes,
 INITCAP(notes) 
 from concatcommand;
@@ -301,13 +347,19 @@ select * from concatcommand
 SELECT notes, UPPER(LEFT(notes, 1)) || SUBSTRING(notes FROM 2)
 FROM concatcommand;
 
---LENGTH command is used to check the letters count , it also counts spaces 
+-- ===========================================================================
+-- --LENGTH command is used to check the letters count , it also counts spaces 
+-- ===========================================================================
+
 SELECT 
     first_name,
     LENGTH(first_name) AS len_name
 FROM concatcommand;
 
---TRIM operator
+-- ==============
+-- --TRIM operator
+-- ==============
+
 select
 	first_name,
 	length(first_name),
@@ -343,7 +395,11 @@ SELECT
 FROM concatcommand;
 
 select * from concatcommand;
--- REPLACE FUNCTION if you want to remove all spaces
+
+-- ====================================================
+-- -- REPLACE FUNCTION if you want to remove all spaces
+-- ====================================================
+
 SELECT 
     notes,
     REPLACE(notes, ' ', '') AS withoutspace
@@ -360,12 +416,18 @@ FROM contacts;
 
 select * from contacts;
 
+-- ================
 -- length function
+-- ================
+
 select first_name,
 length(first_name) as name
 from concatcommand;
 
---extract funtion
+-- =================
+-- --extract funtion
+-- =================
+
 select first_name,
 left(first_name, 2) as test
 from concatcommand;
@@ -374,13 +436,19 @@ select first_name,
 right(first_name, 2) as test
 from concatcommand;
 
---SUBSTRING FUNCTION;
---only first letter of the line will be capital
+-- ==============================================
+-- SUBSTRING FUNCTION;
+-- only first letter of the line will be capital
+-- ==============================================
+
 SELECT notes,UPPER(LEFT(notes, 1)) ||  SUBSTRING(notes from 2) as test
 FROM concatcommand;
 
---SUBSTRING(notes from 2), (from 2 or notes,2) is same thing
---it will skip first letter
+-- =====================================
+-- SUBSTRING(notes from 2), (from 2 or notes,2) is same thing
+-- it will skip first letter
+-- =====================================
+
 select first_name,
 substring(first_name, 2) as test
 from concatcommand;
@@ -397,7 +465,11 @@ select city || '-' || state from concatcommand;
 select concat(city, ' ',state) from concatcommand;
 
 select * from contacts
+
+-- ===============================================
 -- Position function is used to find a word in sql
+-- ===============================================
+
 select notes,
 position('university' in notes) from contacts;
 
@@ -590,7 +662,9 @@ VALUES
  row_number() over (partition by id order by salary desc) as row_number1,salary
  from window_function_data;
 
- -- LAG and LEAD Function
+-- ======================
+-- LAG and LEAD Function
+-- ======================
  
  SELECT
     employee_name,department,salary,
@@ -605,13 +679,17 @@ SELECT
     LAG(sales_amount,1) OVER (ORDER BY sales_amount) AS growth
 FROM window_function_data;
 
---LEAD FUNCTION
+-- =============
+-- LEAD FUNCTION
+-- =============
 
 SELECT employee_name,department,salary,
     LEAD(salary) OVER (PARTITION BY department ORDER BY salary) AS next_salary
 FROM window_function_data;
 
---SUM and OVER Function
+-- =====================
+-- SUM and OVER Function
+-- =====================
 
 SELECT
     employee_name,
@@ -623,7 +701,9 @@ SELECT
     ) AS department_running_sales
 FROM window_function_data;
 
+-- =============
 -- SUM FUNCTION
+-- =============
 
 SELECT
     employee_name,
@@ -637,8 +717,9 @@ SELECT
     ) AS moving_average
 FROM window_function_data;
 
---mn ab VIEWS FUNCTION study kr rha ho, is mn 4 tables datawithbara na use kye hn
-
+-- ===============================================================================
+-- mn ab VIEWS FUNCTION study kr rha ho, is mn 4 tables datawithbara na use kye hn
+-- ===============================================================================
 
 
 
@@ -724,7 +805,10 @@ INSERT INTO sales.orders VALUES
     (9, 101, 2, 3, '2025-03-10', '2025-03-15', 'Shipped','3768 Door Way', '', 2, 20,'2025-03-10 12:59:04'),
     (10, 102, 3, 5, '2025-03-15', '2025-03-20', 'Shipped',NULL, NULL, 0, 60,'2025-03-16 23:25:15');
 
--- these 4 tables for VIEWS in sql 
+-- ================================
+-- these 4 tables for VIEWS in sql
+-- ================================
+
 select * from sales.customers;
 
 select * from sales.employees;
@@ -733,8 +817,10 @@ select * from sales.products;
 
 select * from sales.orders;
 
+-- ========================================================================================================================
 -- first giving an example of CTE(common table expression),
---it's not part of views,You can reference a CTE multiple times, but only inside the exact same query where it was defined.
+-- it's not part of views,You can reference a CTE multiple times, but only inside the exact same query where it was defined.
+-- ========================================================================================================================
 
 WITH cte_monthly_summary AS (
     SELECT 
@@ -765,7 +851,9 @@ CREATE VIEW sales.VIEW_MONTHLY_SUMMARY AS(
     GROUP BY date_trunc('month', order_date)
 ) 
 
+-- =======================================
 -- now view has created , lets check it
+-- =======================================
 
 SELECT * FROM VIEW_MONTHLY_SUMMARY
 
@@ -801,3 +889,103 @@ LEFT JOIN sales.customers c
 LEFT JOIN sales.employees e 
 ON e.employee_id = o.sales_person_id
 );
+
+--=================
+--STORED PROCEDURES
+--=================
+--===========================================================================================================
+-- DATAWITHBARAA said wo stored procedure ko big projects mn kbi istimal nahi kre ga balka is kam ka liya wo PYTHON ka use kra ga.
+-- CLAUDE ka mutabiq STORED PROCEDURE ko kab ismal kerna chahiya or kb PYTHON, AIRFLOW OR DBT ko.
+-- >>>>> 1- Jab Kaam Simple & Repetitive Ho 
+-- >>>>> Use Case A: Daily Log Insert
+-- Reason: ye kaam har roz SAME HAI, kabhi login change nahi hota, isay PYTHON script mein wrap karna unnecessary overhead hai.
+
+CREATE PROCEDURE log_daily_run(p_status TEXT, p_rows INT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	INSERT INTO etl_log(run_date, status, rows_processed)
+	VALUES (CURRENT_DATE, p_status, p_rows);
+END;
+$$;
+
+-- >>>>> USE CASE B: Basic Validation
+-- Reason: Simple rule-based check hai, logic babhi evolve nahi hoga.
+
+CREATE PROCEDURE validate_not_null(p_table TEXT, p_column TEXT)
+LANGUAGE plpgsql
+AS $$
+DECLARE 
+	null_count INT;
+BEGIN
+	EXECUTE format('SELECT COUNT(*) FROM %I WHERE %I IS NULL', p_table, p_column)
+	INTO null_count;
+
+	IF null_count >0 THEN
+		RAISE EXCEPTION 'Validation failed: % nulls in %' null_count, p_column;
+	END IF;
+END;
+$$;
+
+-- ==> 2- Jab Performance Critical Ho(Data DB se Bahar Na Nikle)
+-- >>>>> Use Case A: Bulk Upsert(Lakhon Rows)
+-- Reason: Agar ye Python se karte (row by row fetch -> process -> push back), network round_trips ;akhon dafa honge ( bohat slow). DB ke andar hi karna sahi hai.
+
+CREATE PROCEDURE bulk_upsert_orders()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	INSERT INTO fact_orders
+	SELECT * FROM staging_orders
+	ON CONFLICT (order_id)
+	DO UPDATE SET amount = EXCLUDED.amount, updated_at = NOW();
+END;
+$$;
+
+-- >>>>> Use Case B: Heavy Aggregation
+-- Reason: Millions rows ko Python mein load karke aggregate karna memory heavy hai - DB ka query engine isay zyada efficiently karta hai.
+
+CREATE PROCEDURE refresh_daily_summary()
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	INSERT INTO daily_summary
+	SELECT sale_date, SUM(amount),COUNT(*)
+	FROM fact_sales
+	WHERE sale_date = CURRENT_DATE
+	GROUP BY sale_date;
+END;
+$$:
+
+-- >>>>> 3- Jab Security Matter Kare (No Direct Table Access)
+-- Use Case: Restricted Reporting Access
+-- Reason: jb ap sara data kisi ko na show krwana chahta hon.
+
+CREATE PROCEDURE get_sales_report(p_region TEXT)
+LANGUAGE plpgsql 
+SECURITY DEFINER
+AS $$
+BEGIN
+	-- analyst kno sirf summary milta hai, raw table access nahi
+	INSERT INTO report_output
+	SELECT region, SUM(amount) FROM fact_sales
+	WHERE region = p_region;
+END;
+$$;
+
+	-- Sirf execute permission do, table access nahi
+GRANT EXECUTE ON PROCEDURE get_sales_report(TEXT) TO analyst_role;
+REVOKE ALL ON fact_sales FROM analyst_role;
+-- =====> Contrast: Jab Python/Airflow/dbt Behtar Hai
+-- SCENARIO                      			BEHTAR TOOL
+-- APIs se data lana             			PYTHON-- DN SQL APIs call ahi kar sakta
+-- (Strip, salesfrce)
+-- -----------------------------------------------------------------------
+-- Logic jo har hafte change ho             DBT -- Git mein version track hota hai
+-- --------------------------------------------------------------------------
+-- Multiple databases ko sync karna         Airflow -- cross system orchestration
+-- -----------------------------------------------------------------------
+-- ML model run karna data pe               PYTHON -- sklearn/panda chahiye (Python Liabaries) (Pandas Manipulation Library-- data ko load, clean, transform, aur analyze karna)
+-- (Scikit-learn or sklearn is Machine Learning Library, uses for Data se predictions/patterns nikalna,  ye ML models banane ke liye hai.)
+-- ------------------------------------------------------------------------
+-- Pipeline fail hone pe Slack alert        Airflow -- built in alert hooks
